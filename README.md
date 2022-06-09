@@ -1,2 +1,2 @@
-# DesingPattern
-## Patrones de diseño Singleton, Adapter, Oberver, MVVM
+# Desing Pattern
+## Patrones de diseño Singleton, Adapter, Observer, MVVM
