@@ -1,14 +1,39 @@
 package com.example.appdesingpattern.viewmodel
 
-import androidx.lifecycle.LiveData
+import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.appdesingpattern.apirest.response.ResultsItem
+import androidx.lifecycle.viewModelScope
+import com.example.appdesingpattern.db.DBRoomDatabase
+import com.example.appdesingpattern.domain.model.Person
 import com.example.appdesingpattern.repository.PersonRepository
+import kotlinx.coroutines.launch
 
-class PersonViewModel: ViewModel() {
-    private var repository = PersonRepository()
+class PersonViewModel(application: Application): ViewModel() {
+    private val repository: PersonRepository
+    init {
+        val personDao = DBRoomDatabase.getDatabase(application)
+            .personDao()
+        repository = PersonRepository(personDao)
+    }
 
-    fun personList(): LiveData<List<ResultsItem>> {
-        return repository.personList()
+    val listPerson = MutableLiveData<List<Person>>()
+    val isLoading = MutableLiveData<Boolean>()
+
+    fun onCreate() {
+        viewModelScope.launch {
+            isLoading.postValue(true)
+            listPerson.value = repository.allByDb()
+            isLoading.postValue(false)
+        }
+    }
+
+    fun add(person: Person) {
+        viewModelScope.launch {
+            isLoading.postValue(true)
+            repository.add(person)
+            isLoading.postValue(false)
+            onCreate()
+        }
     }
 }

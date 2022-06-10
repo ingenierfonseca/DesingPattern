@@ -3,10 +3,10 @@ package com.example.appdesingpattern.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.appdesingpattern.apirest.response.ResultsItem
 import com.example.appdesingpattern.databinding.PersonItemBinding
+import com.example.appdesingpattern.domain.model.Person
 
-class PersonAdapter(private val listPerson: List<ResultsItem>)
+class PersonAdapter(private var listPerson: List<Person>)
     : RecyclerView.Adapter<PersonAdapter.ViewHolder>()
 {
     inner class ViewHolder(val binding: PersonItemBinding)
@@ -32,5 +32,10 @@ class PersonAdapter(private val listPerson: List<ResultsItem>)
 
     override fun getItemCount(): Int {
         return listPerson.size
+    }
+
+    fun listPerson(list: List<Person>) {
+        listPerson = list
+        notifyDataSetChanged()
     }
 }
